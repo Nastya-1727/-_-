@@ -1,0 +1,142 @@
+﻿string
+
+    <string name="edittext1">Pref</string>
+    <string name="edittext2">Str</string>
+    <string name="edittext3">Int</string>
+
+colors
+
+    <color name="фон">#CDEEEF</color>
+    <color name="текст">#F5373730</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="listview">#CB73ACBA</color>
+    <color name="red">#F44336</color>
+    <color name="blue">#3F51B5</color>
+    <color name="green">#4CAF50</color>
+
+manifest
+
+        <activity android:exported="true" android:name=".Main">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+
+main_act
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/фон"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/edittext1"
+        android:text="@string/edittext1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_weight="1"
+        android:background="@color/listview"
+        android:padding="26dp"
+        android:textAllCaps="false"
+        android:textColor="@color/текст"
+        android:textSize="16sp" />
+    <EditText
+        android:id="@+id/edittext2"
+        android:text="@string/edittext2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_weight="1"
+        android:background="@color/listview"
+        android:padding="26dp"
+        android:textAllCaps="false"
+        android:textColor="@color/текст"
+        android:textSize="16sp" />
+    <EditText
+        android:id="@+id/edittext3"
+        android:text="@string/edittext3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_weight="1"
+        android:background="@color/listview"
+        android:padding="26dp"
+        android:textAllCaps="false"
+        android:textColor="@color/текст"
+        android:textSize="16sp" />
+</LinearLayout>
+
+Main
+
+package com.example.myapplication;
+
+
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.EditText;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Main extends AppCompatActivity {
+    private SharedPreferences preferences;
+    EditText etInt, etStr, etpref;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_act);
+        etInt = findViewById(R.id.edittext3);
+        etStr = findViewById(R.id.edittext2);
+        etpref = findViewById(R.id.edittext1);
+        preferences = getSharedPreferences( getString(R.string.edittext1), MODE_PRIVATE );
+
+    }
+    @Override
+    protected void onResume() { //выгрузка настроек
+        super.onResume();
+
+        String intElKey = getString(R.string.edittext3);  //получаем из строкового ресурса ключ
+        //все ключи – строкового типа
+        int intEl  = preferences.getInt(intElKey, 5);
+
+
+        String strElKey1 = getString(R.string.edittext2);
+        String strEl1 = preferences.getString(strElKey1, "???");
+
+        String strElKey2 = getString(R.string.edittext1);
+        String strEl2 = preferences.getString(strElKey2, "pref");
+
+        etStr.setText(strEl1);
+        etpref.setText(strEl2);
+        etInt.setText(String.valueOf(intEl));
+    }
+    @Override
+    protected void onPause() { //сохранение настроек
+        super.onPause();
+
+        int intValue = Integer.parseInt(etInt.getText().toString());
+
+
+        String strValue = etStr.getText().toString();
+        String strValue2 = etpref.getText().toString();
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(getString(R.string.edittext3), intValue);
+
+
+        editor.putString(getString(R.string.edittext2), strValue);
+        editor.putString(getString(R.string.edittext1), strValue2);
+        editor.commit();
+    }
+
+}
+
+
+
